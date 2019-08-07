@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Document</title>
+
+
+</head>
+
+<body>
+    <button onclick="LineAuth()">點選 Line Login</button>
+</body>
+
+<script>
+    function LineAuth() {
+        var URL = 'https://access.line.me/oauth2/v2.1/authorize?';
+        URL += 'response_type=code';
+        URL += '&client_id=1605499479';
+        URL += '&redirect_uri=http://127.0.0.1:5500/index.html';
+        URL += '&state=abcde';
+        URL += '&scope=openid%20profile';
+        window.location.href = URL;
+    }
+    // console.log(location)
+    // console.log(location.href)
+    let myhref = location.href.toString();
+    console.log(myhref);
+    let mycode = myhref.split("?")[1].split("&")[0].slice(5);
+
+    console.log(mycode);
+
+
+
+
+
+    // if (mycode) {
+    //     var formData = new FormData()
+    //     formData.append('grant_type', 'authorization_code')
+    //     formData.append('redirect_uri', 'http://127.0.0.1:5500/index.html')
+    //     formData.append('client_id', '1605499479')
+    //     formData.append('client_secret', '097642b9b568163282d92b2d4aa4be3b')
+    //     formData.append('code', mycode)
+    //     console.log(formData.toString());
+    //     fetch('https://api.line.me/oauth2/v2.1/token', {
+    //         method: 'POST',
+    //         // credentials: 'include',
+    //         // mode: 'cors',
+    //         headers: {
+
+    //             'Content-Type': 'application/x-www-form-urlencoded',
+    //         },
+    //         body: 'grant_type=authorization_code&redirect_uri=http://127.0.0.1:5500/index.html&client_id=1605499479&client_secret=097642b9b568163282d92b2d4aa4be3b&code=' + mycode
+    //     }).then(res => res.json())
+    //         .then(data => console.log(data))
+    //         .catch(err => console.log(err))
+    // }
+
+
+    if (mycode) {
+        var formData = {
+            'grant_type': 'authorization_code',
+            'redirect_uri': 'http://127.0.0.1:5500/index.html',
+            'client_id': '1605499479',
+            'client_secret': '097642b9b568163282d92b2d4aa4be3b',
+            'code': mycode
+        };
+
+        console.log(formData);
+        const formBody = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&');
+        console.log(formBody);
+        fetch('https://api.line.me/oauth2/v2.1/token', {
+            method: 'POST',
+            // credentials: 'include',
+            // mode: 'cors',
+            headers: {
+
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formBody
+        }).then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+    }
+</script>
+
+</html>
